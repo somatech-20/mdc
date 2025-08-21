@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MDC - Markdown Cleaner: Convert Markdown files to plain text quickly and easily.">
+    <meta name="keywords" content="markdown, cleaner, text converter, markdown to text, online tool">
+    <meta name="author" content="MM">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph / Twitter Card -->
+    <meta property="og:title" content="MDC - Markdown Cleaner">
+    <meta property="og:description" content="Convert Markdown files to plain text with this fast and accessible online tool.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="MDC - Markdown Cleaner">
+    <meta name="twitter:description" content="Convert Markdown files to plain text with this fast and accessible online tool.">
+    <title>MDC - Markdown Cleaner</title>
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/fav/favicon-32x32.png" loading="lazy">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/fav/favicon-16x16.png" loading="lazy">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/fav/apple-touch-icon.png" loading="lazy">
+    <link rel="manifest" href="/assets/fav/site.webmanifest">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" async>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" async>
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-bg: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --text-color: #e0e0e0;
+            --primary: #007bff;
+            --primary-hover: #0056b3;
+            --success: #28a745;
+            --success-hover: #218838;
+            --error: #dc3545;
+        }
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            flex: 1;
+            padding: 0 15px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease;
+            border-radius: 0.75rem;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+        .btn-success {
+            background-color: var(--success);
+            border-color: var(--success);
+        }
+        .btn-success:hover {
+            background-color: var(--success-hover);
+            border-color: var(--success-hover);
+        }
+        #output {
+            white-space: pre-wrap;
+            min-height: 200px;
+            max-height: 400px;
+            background-color: #333;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
+            overflow-y: auto;
+            border: 1px solid #444;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 700;
+            color: #ffffff;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 2rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        footer a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .error {
+            color: var(--error);
+            font-weight: 500;
+        }
+        .btn-group {
+            gap: 0.5rem;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .icon {
+            margin-right: 0.5rem;
+        }
+        @media (max-width: 576px) {
+            .container {
+                margin: 1rem auto;
+                padding: 0 10px;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+            #output {
+                max-height: 300px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+        [data-bs-toggle="tooltip"] {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body data-bs-theme="dark">
+    <header class="container">
+        <div class="header">
+            <h1><i class="bi bi-markdown-fill icon"></i>MDC - Markdown Cleaner</h1>
+            <p class="text-muted">Convert Markdown files to plain text effortlessly</p>
+        </div>
+    </header>
+    <main class="container">
+        <section class="card p-4" aria-labelledby="cleaner-title">
+            <h2 id="cleaner-title" class="visually-hidden">Markdown Cleaner Tool</h2>
+            <div class="mb-3">
+                <label for="fileInput" class="form-label"><i class="bi bi-file-earmark-text icon"></i>Select Markdown File</label>
+                <input type="file" class="form-control" id="fileInput" accept=".md,.markdown" aria-describedby="fileHelp">
+                <div id="fileHelp" class="form-text">Upload a .md or .markdown file to clean.</div>
+            </div>
+            <div class="d-flex btn-group mb-3">
+                <button class="btn btn-primary" id="processBtn" onclick="processFile()" data-bs-toggle="tooltip" data-bs-placement="top" title="Clean the selected Markdown file"><i class="bi bi-gear-fill icon"></i>Clean Markdown</button>
+                <button class="btn btn-success d-none" id="copyBtn" onclick="copyToClipboard()" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy cleaned text to clipboard"><i class="bi bi-clipboard icon"></i>Copy to Clipboard</button>
+            </div>
+            <div>
+                <h3 class="h5"><i class="bi bi-text-left icon"></i>Cleaned Text:</h3>
+                <div id="output" class="border" role="region" aria-live="polite" tabindex="0"></div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 MDC - Markdown Cleaner. All rights reserved. | <a href="https://github.com/somatech-20/mdc" target="_blank" aria-label="GitHub repository for MDC"><i class="bi bi-github icon"></i>GitHub Repository</a></p>
+    </footer>
+
+    <!-- Bootstrap 5 JS and Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous" async></script>
+    <script>
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', () => {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        });
+
+        function cleanMarkdown(text) {
+            try {
+                // Remove headers
+                text = text.replace(/^#{1,6}\s*(.*?)\s*$/gm, '$1');
+                // Remove bold
+                text = text.replace(/\*\*(.*?)\*\*/g, '$1').replace(/__(.*?)__/g, '$1');
+                // Remove italic
+                text = text.replace(/(?<!\*)(\*|_)(.*?)(?<!\*)(\*|_)(?!\w)/g, '$2');
+                // Remove links
+                text = text.replace(/\[([^\]]*)\]\([^\)]*\)/g, '$1');
+                // Remove images
+                text = text.replace(/!\[([^\]]*)\]\([^\)]*\)/g, '$1');
+                // Remove inline code
+                text = text.replace(/`([^`]+)`/g, '$1');
+                // Remove code blocks
+                text = text.replace(/```[\s\S]*?```/g, '').replace(/~~~[\s\S]*?~~~/g, '');
+                // Remove blockquotes
+                text = text.replace(/^>\s*(.*)/gm, '$1');
+                // Remove unordered list items
+                text = text.replace(/^(\s*[-*+])\s+(.*)/gm, '$2');
+                // Remove ordered list items
+                text = text.replace(/^(\s*\d+\.)\s*(.*)/gm, '$2');
+                // Remove horizontal rules
+                text = text.replace(/^[-*_]{3,}\s*$/gm, '');
+                // Remove strikethrough
+                text = text.replace(/~~(.*?)~~/g, '$1');
+                // Remove tables
+                text = text.replace(/^\|.*\|\s*$/gm, '').replace(/^\s*[-:|\s]+\s*$/gm, '');
+                // Remove escaped characters
+                text = text.replace(/\\([*#_|])/g, '$1');
+                // Handle stray asterisks
+                text = text.replace(/^\s*\*\s*(.*?)\s*\*(?=\s|$)/gm, '$1');
+                // Remove extra blank lines
+                text = text.replace(/\n\s*\n/g, '\n');
+                // Strip whitespace
+                return text.trim();
+            } catch (error) {
+                console.error('Error cleaning markdown:', error);
+                return null;
+            }
+        }
+
+        function processFile() {
+            const fileInput = document.getElementById('fileInput');
+            const outputDiv = document.getElementById('output');
+            const processBtn = document.getElementById('processBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            
+            outputDiv.classList.remove('error');
+            processBtn.classList.add('loading');
+            processBtn.innerHTML = '<i class="bi bi-hourglass-split icon"></i>Processing...';
+            copyBtn.classList.add('d-none');
+            
+            if (!fileInput.files.length) {
+                outputDiv.classList.add('error');
+                outputDiv.textContent = 'Please select a file.';
+                processBtn.classList.remove('loading');
+                processBtn.innerHTML = '<i class="bi bi-gear-fill icon"></i>Clean Markdown';
+                outputDiv.focus();
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const cleanedText = cleanMarkdown(text);
+                if (cleanedText) {
+                    outputDiv.textContent = cleanedText;
+                    copyBtn.classList.remove('d-none');
+                    outputDiv.focus();
+                } else {
+                    outputDiv.classList.add('error');
+                    outputDiv.textContent = 'Error processing markdown.';
+                }
+                processBtn.classList.remove('loading');
+                processBtn.innerHTML = '<i class="bi bi-gear-fill icon"></i>Clean Markdown';
+            };
+            
+            reader.onerror = function() {
+                outputDiv.classList.add('error');
+                outputDiv.textContent = 'Error reading file.';
+                processBtn.classList.remove('loading');
+                processBtn.innerHTML = '<i class="bi bi-gear-fill icon"></i>Clean Markdown';
+                outputDiv.focus();
+            };
+            
+            reader.readAsText(file);
+        }
+
+        function copyToClipboard() {
+            const outputDiv = document.getElementById('output');
+            const copyBtn = document.getElementById('copyBtn');
+            const text = outputDiv.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                copyBtn.innerHTML = '<i class="bi bi-check-circle icon"></i>Copied!';
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<i class="bi bi-clipboard icon"></i>Copy to Clipboard';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                outputDiv.classList.add('error');
+                outputDiv.textContent = 'Failed to copy text.';
+                outputDiv.focus();
+            });
+        }
+
+        // Keyboard navigation for accessibility
+        document.getElementById('fileInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                processFile();
+            }
+        });
+    </script>
+</body>
+</html>
