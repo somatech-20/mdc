@@ -1,3 +1,4 @@
+#TODO: move the script to a py branch in qscripts
 import argparse
 import re
 import sys
